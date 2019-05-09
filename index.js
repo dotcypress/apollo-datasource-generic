@@ -1,26 +1,28 @@
 const { InMemoryLRUCache, PrefixingKeyValueCache } = require('apollo-server-caching')
 
 class GenericDataSource {
-  constructor(prefix = 'gencache:', ttl) {
-    this.keyPrefix = prefix
+  constructor (keyPrefix = 'gencache:', ttl) {
+    this.keyPrefix = keyPrefix
     this.ttl = ttl
   }
 
-  initialize(config) {
+  initialize (config) {
     this.context = config.context
     const kvCache = config.cache || new InMemoryLRUCache()
     this.cache = new PrefixingKeyValueCache(kvCache, this.keyPrefix)
   }
 
-  get(key, loaderFn) {
+  get (key, loaderFn, valueTTL) {
     return this.cache.get(key)
-      .then((cached) => {
-        if (cached) {
-          return JSON.parse(cached)
+      .then((value) => {
+        if (value) {
+          return JSON.parse(value)
         }
         return Promise.resolve(loaderFn())
           .then((value) => {
-            return value && this.cache.set(key, JSON.stringify(value), this.ttl && { ttl: this.ttl })
+            const ttl = valueTTL || this.ttl
+            const options = ttl && { ttl }
+            return value && this.cache.set(key, JSON.stringify(value), options)
               .then(() => value)
           })
       })
