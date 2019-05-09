@@ -18,7 +18,7 @@ yarn add apollo-datasource-generic
 
 Define a data source by extending the `GenericDataSource` class.
 
-```
+```js
 const { fetchNews } = require('example-news-loader')
 
 class TestDataSource extends GenericDataSource {
