@@ -16,7 +16,7 @@ class GenericDataSource {
     return this.cache.get(key)
       .then((raw) => raw
         ? JSON.parse(raw)
-        : invalidate(key, loaderFn, valueTTL)
+        : this.invalidate(key, loaderFn, valueTTL)
       )
   }
 
