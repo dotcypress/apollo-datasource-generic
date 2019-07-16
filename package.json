@@ -1,6 +1,6 @@
 {
   "name": "apollo-datasource-generic",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A generic implementaion of apollo datasource",
   "main": "index.js",
   "author": "Vitaly Domnikov <oss@vitaly.codes>",
@@ -10,6 +10,6 @@
   },
   "homepage": "https://github.com/dotcypress/apollo-datasource-generic#readme",
   "dependencies": {
-    "apollo-server-caching": "^0.4.0"
+    "apollo-server-caching": "^0.5.0"
   }
 }

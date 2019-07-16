@@ -27,6 +27,10 @@ class GenericDataSource {
       .then(() => value)
   }
 
+  delete (key) {
+    return this.cache.delete(key)
+  }
+
   invalidate (key, loaderFn, valueTTL) {
     return Promise.resolve(loaderFn())
       .then((value) => value
