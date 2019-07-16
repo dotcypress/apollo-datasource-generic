@@ -31,7 +31,7 @@ class TestDataSource extends GenericDataSource {
   }
 
   getNews (source) {
-    return this.get(source, () => fetchNews(source))
+    return this.get(source, fetchNews)
   }
 }
 ```
