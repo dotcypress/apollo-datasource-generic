@@ -1,6 +1,6 @@
 {
   "name": "apollo-datasource-generic",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A generic implementaion of apollo datasource",
   "main": "index.js",
   "author": "Vitaly Domnikov <oss@vitaly.codes>",

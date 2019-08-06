@@ -1,20 +1,19 @@
 const { InMemoryLRUCache, PrefixingKeyValueCache } = require('apollo-server-caching')
 
 class GenericDataSource {
-  constructor (keyPrefix = 'gen:', ttl, resolveFn) {
+  constructor (keyPrefix = 'gen:', config = {}) {
     this.keyPrefix = keyPrefix
-    this.resolveFn = resolveFn
-    this.ttl = ttl
+    this.config = config
   }
 
-  initialize (config) {
-    this.context = config.context
-    const kvCache = config.cache || new InMemoryLRUCache()
+  initialize ({ cache, context }) {
+    const kvCache = cache || new InMemoryLRUCache()
     this.cache = new PrefixingKeyValueCache(kvCache, this.keyPrefix)
+    this.context = context
   }
 
   get (key, resolveFn, ttl) {
-    const load = resolveFn || this.resolveFn
+    const load = resolveFn || this.config.resolveFn
     return this.cache.get(key)
       .then((raw) => raw
         ? JSON.parse(raw)
@@ -27,10 +26,18 @@ class GenericDataSource {
   }
 
   set (key, value, ttlVal) {
-    const ttlFn = ttlVal || this.ttl
+    const ttlFn = ttlVal || this.config.ttl
     const ttl = typeof ttlFn === 'function' ? ttlFn(value) : ttlFn
     return this.cache.set(key, JSON.stringify(value), ttl && { ttl })
       .then(() => value)
+  }
+
+  store (value, ttlVal) {
+    if (typeof this.config.storeKeyFn !== 'function') {
+      throw new Error('Missing config: storeKeyFn')
+    }
+    const key = this.config.storeKeyFn(value)
+    return this.set(key, value, ttlVal)
   }
 
   delete (key) {
