@@ -4,11 +4,11 @@ class GenericDataSource {
   constructor (keyPrefix = 'gen:', config = {}) {
     this.keyPrefix = keyPrefix
     this.config = config
+    this.cache = new PrefixingKeyValueCache(new InMemoryLRUCache(), keyPrefix)
   }
 
   initialize ({ cache, context }) {
-    const kvCache = cache || new InMemoryLRUCache()
-    this.cache = new PrefixingKeyValueCache(kvCache, this.keyPrefix)
+    this.cache = new PrefixingKeyValueCache(cache || new InMemoryLRUCache(), this.keyPrefix)
     this.context = context
   }
 
